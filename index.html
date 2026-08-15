@@ -20,6 +20,24 @@ main{max-width:1480px;margin:auto;padding:22px 28px}.filters{display:grid;grid-t
 .modal{position:fixed;inset:0;background:#0006;z-index:30;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:20px}.modalhead{display:flex;justify-content:space-between;gap:20px}.close{border:0;background:#f1f3f5;border-radius:8px;padding:7px 10px;cursor:pointer}.detailgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.detail{border:1px solid var(--line);border-radius:9px;padding:10px}.detail small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}
 @media(max-width:1150px){.filters{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr}}
 @media(max-width:650px){main{padding:14px}.filters,.cards{grid-template-columns:1fr 1fr}.head{align-items:flex-start;flex-direction:column}.detailgrid{grid-template-columns:1fr}}
+
+.printbar{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 15px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:15px}.printbar strong{font-size:14px}.printbar span{color:var(--muted);font-size:11px;margin-left:8px}.printactions{display:flex;gap:8px}.printbtn{border:0;background:#111827;color:#fff;padding:9px 13px;border-radius:9px;cursor:pointer;font-weight:700}.printbtn:hover{opacity:.9}.grid-meta{font-size:11px;color:var(--muted)}.analytical-panel{margin-bottom:20px}.analytical-wrap{max-height:650px}.analytical-panel table{font-size:12px}.analytical-panel th{background:#f3f6fa}.analytical-panel td{max-width:260px;overflow:hidden;text-overflow:ellipsis}.analytical-panel .rowclick:hover{background:#eef4ff}
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  body{background:#fff!important;color:#111!important}
+  .header,.filters,.cards,.printbar,nav,#overview,#collection,#records,.modal{display:none!important}
+  main{max-width:none!important;padding:0!important;margin:0!important}
+  #analytical{display:block!important;border:0!important;box-shadow:none!important;padding:0!important}
+  .analytical-panel{display:block!important}
+  .analytical-wrap{max-height:none!important;overflow:visible!important;border:0!important}
+  .analytical-panel h2{font-size:16px;margin-bottom:3px}
+  .analytical-panel .hint{font-size:9px;margin-bottom:8px}
+  .analytical-panel table{font-size:8px;width:100%}
+  .analytical-panel th,.analytical-panel td{padding:4px 5px;white-space:normal;max-width:none;overflow:visible;text-overflow:clip}
+  .analytical-panel thead{display:table-header-group}
+  .analytical-panel tr{page-break-inside:avoid}
+  .grid-meta{font-size:9px}
+}
 </style>
 </head>
 <body>
@@ -36,6 +54,16 @@ main{max-width:1480px;margin:auto;padding:22px 28px}.filters{display:grid;grid-t
 <div><label>Tipo de título</label><select id="title"><option value="all">Todos</option></select></div>
 <div><label>Movimento</label><select id="movement"><option value="all">Todos</option></select></div>
 <div><label>Renegociado</label><select id="reneg"><option value="all">Todos</option><option value="yes">Sim</option><option value="no">Não</option></select></div>
+</section>
+
+<section class="printbar">
+  <div>
+    <strong>Grade analítica</strong>
+    <span id="printSummary">Registros conforme os filtros atuais</span>
+  </div>
+  <div class="printactions">
+    <button class="printbtn" onclick="printAnalyticalGrid()">🖨️ Imprimir / Salvar PDF</button>
+  </div>
 </section>
 
 <section class="cards">
@@ -66,6 +94,22 @@ main{max-width:1480px;margin:auto;padding:22px 28px}.filters{display:grid;grid-t
 <section id="records" class="panel hidden">
 <div class="toolbar"><div><h2>Títulos</h2><div class="hint">Clique em qualquer linha para abrir os detalhes</div></div></div>
 <div class="tablewrap"><table><thead id="recordsHead"></thead><tbody id="recordsBody"></tbody></table></div>
+</section>
+
+<section id="analytical" class="panel analytical-panel">
+  <div class="toolbar">
+    <div>
+      <h2>Grade analítica</h2>
+      <div class="hint">A grade acompanha exatamente os filtros aplicados ao dashboard. Clique em uma linha para ver todos os campos.</div>
+    </div>
+    <div class="grid-meta" id="gridMeta"></div>
+  </div>
+  <div class="tablewrap analytical-wrap">
+    <table id="analyticalTable">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+  </div>
 </section>
 </main>
 
@@ -135,7 +179,7 @@ function renderRecords(){
  $('recordsBody').innerHTML=S.filtered.slice(0,1000).map((r,i)=>`<tr class="rowclick" onclick="openDetail(${S.filtered.indexOf(r)})">${keys.map(k=>`<td>${esc(r[k])}</td>`).join('')}<td><span class="tag">${bucket(days(r))}</span></td></tr>`).join('')||'<tr><td colspan="20" class="empty">Nenhum registro.</td></tr>';
 }
 function render(){
- S.filtered=S.rows.filter(matches);setCards(S.filtered);renderCharts();renderCollection();renderRecords();
+ S.filtered=S.rows.filter(matches);setCards(S.filtered);renderCharts();renderCollection();renderRecords();renderAnalyticalGrid();
  $('subtitle').textContent=`Base: ${integer(S.rows.length)} registros • ${integer(new Set(S.rows.map(partner)).size)} parceiros • esquema conferido com a planilha`;
 }
 function switchTab(tab){
@@ -155,6 +199,24 @@ function suggest(){
  box.innerHTML=names.map(p=>`<div onclick="selectSuggestion('${encodeURIComponent(p)}')">${esc(p)}</div>`).join('');box.style.display=names.length?'block':'none';
 }
 function selectSuggestion(p){$('partnerSearch').value=decodeURIComponent(p);$('suggestions').style.display='none';render()}
+
+function renderAnalyticalGrid(){
+ const keys=Object.keys(S.rows[0]||{});
+ const head=document.querySelector('#analyticalTable thead');
+ const body=document.querySelector('#analyticalTable tbody');
+ head.innerHTML='<tr>'+keys.map(k=>`<th>${esc(k)}</th>`).join('')+'<th>FAIXA</th></tr>';
+ const rows=S.filtered;
+ body.innerHTML=rows.length?rows.map((r,i)=>`<tr class="rowclick" onclick="openDetail(${i})">${keys.map(k=>`<td title="${esc(r[k])}">${esc(r[k])}</td>`).join('')}<td><span class="tag">${bucket(days(r))}</span></td></tr>`).join(''):'<tr><td colspan="'+(keys.length+1)+'" class="empty">Nenhum registro encontrado.</td></tr>';
+ $('gridMeta').textContent=`${integer(rows.length)} registros`;
+ $('printSummary').textContent=`${integer(rows.length)} registros • filtros atuais`;
+}
+function printAnalyticalGrid(){
+ // Print only the analytical grid. The browser's print dialog offers "Salvar como PDF".
+ document.body.classList.add('printing-grid');
+ window.print();
+ setTimeout(()=>document.body.classList.remove('printing-grid'),500);
+}
+
 fetch('data.json').then(r=>r.json()).then(rows=>{
  S.rows=rows;
  const keys=Object.keys(rows[0]||{});S.keys={partner:'PARCEIRO',date:'DATA',due:'VENCIMENTO',delay:'ATRASO',document:'DOCUMENTO',seller:'VENDEDOR',amount:'VALOR',movement:'MOVIMENTO',reneg:'Renegociados ?',bank:'Banco',title:'TITULO',history:'Histórico'};

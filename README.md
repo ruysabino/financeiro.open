@@ -48,3 +48,10 @@ Settings → Pages → Deploy from a branch → main → / (root)
 ## Privacidade
 
 `data.json` contém os dados financeiros. Não publique o repositório como público se a base não puder ser exposta.
+
+
+## V3 — Grade analítica e PDF
+
+A V3 adiciona uma grade analítica abaixo do dashboard. Ela respeita todos os filtros atuais e mostra os registros correspondentes.
+
+O botão **Imprimir / Salvar PDF** abre a impressão do navegador em formato A4 paisagem, ocultando o restante do dashboard e imprimindo somente a grade analítica. No diálogo do navegador, escolha **Salvar como PDF** para gerar o arquivo.
