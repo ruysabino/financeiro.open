@@ -1,49 +1,31 @@
-# Dashboard Financeiro — V4
+# Painel Financeiro — Cruzamentos + Cabeçalho
 
-## Lógica de dias
+Esta versão mantém o dashboard do ficheiro enviado e consolida duas melhorias:
 
-A métrica de dias agora é calculada **no navegador, usando a data atual menos a data de vencimento**:
+## Cruzamentos
 
-`dias = hoje - vencimento`
+A aba **Cruzamentos** permite cruzar duas dimensões usando os filtros ativos:
 
-- resultado negativo = **A vencer**
-- resultado zero = **vence hoje** e entra em **A vencer**
-- resultado positivo = **Vencido**
+- Vendedor responsável
+- Parceiro
+- Tipo de movimento
+- Tipo de título
+- Faixa de dias
+- Renegociado
 
-A coluna original `ATRASO` da planilha não é usada para determinar a faixa.
+É possível medir por **Valor (R$)** ou **Quantidade de títulos**. A matriz usa escala de intensidade para destacar os maiores cruzamentos, permite inverter linhas/colunas e clicar numa célula para aplicar o cruzamento aos filtros.
 
-## Faixa de dias
+## Cabeçalho
 
-A mesma métrica, em valor absoluto, é usada para os dois status:
+A marca `logo.png` foi aplicada no cabeçalho com dimensão controlada, mantendo a proporção e evitando que a logo domine a tela. Em telas menores ela reduz automaticamente.
 
-- 0–30 dias
-- 31–60 dias
-- 61–90 dias
-- 91–180 dias
-- Mais de 180 dias
+## Publicação no GitHub Pages
 
-O status é separado em um seletor:
-
-**Todos | A vencer | Vencidos**
-
-Assim, por exemplo, `15 dias` significa:
-- 15 dias para vencer, quando o status é A vencer;
-- 15 dias de atraso, quando o status é Vencidos.
-
-## PDF / Impressão
-
-O botão **Imprimir / Salvar PDF** continua leve no dashboard. A grade detalhada só é construída na janela de impressão, usando os filtros atuais.
-
-A exportação inclui a logo do cabeçalho e a coluna **FAIXA DE DIAS**.
-
-## Busca
-
-A busca de parceiro encontra qualquer trecho do nome, sem diferenciar maiúsculas/minúsculas ou acentos.
-
-## Arquivos
+Mantenha estes quatro arquivos na mesma pasta:
 
 - `index.html`
 - `data.json`
 - `schema.json`
 - `logo.png`
-- `README.md`
+
+O `index.html` referencia `data.json` e `logo.png` por caminho relativo.
