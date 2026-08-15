@@ -1,0 +1,54 @@
+{
+  "sheet": "DADOS",
+  "columns": [
+    {
+      "original": "PARCEIRO",
+      "key": "parceiro"
+    },
+    {
+      "original": "Emissão",
+      "key": "emissão"
+    },
+    {
+      "original": "Vencimento",
+      "key": "vencimento"
+    },
+    {
+      "original": "Dias de Atraso",
+      "key": "dias_de_atraso"
+    },
+    {
+      "original": "Nota",
+      "key": "nota"
+    },
+    {
+      "original": "CARTEIRA",
+      "key": "carteira"
+    },
+    {
+      "original": "VALOR",
+      "key": "valor"
+    },
+    {
+      "original": "TIPO MOVIMENTO",
+      "key": "tipo_movimento"
+    },
+    {
+      "original": "Renegociados ?",
+      "key": "renegociados"
+    },
+    {
+      "original": "Banco",
+      "key": "banco"
+    },
+    {
+      "original": "TIPO TITULO",
+      "key": "tipo_titulo"
+    },
+    {
+      "original": "Histórico",
+      "key": "histórico"
+    }
+  ],
+  "rows": 13587
+}
