@@ -1,117 +1,171 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Financeiro — Dashboard</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Financeiro — Dashboard V2</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <style>
-:root{--bg:#f5f7fb;--panel:#fff;--text:#172033;--muted:#667085;--line:#e6e9ef;--accent:#2563eb;--danger:#dc2626;--warn:#d97706;--ok:#059669}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-header{background:#111827;color:#fff;padding:22px 28px;position:sticky;top:0;z-index:5;box-shadow:0 2px 12px #0002}
-.wrap{max-width:1440px;margin:auto}header .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px}
-h1{font-size:22px;margin:0 0 4px}.sub{font-size:13px;color:#cbd5e1}
-nav button{background:transparent;border:0;color:#cbd5e1;padding:9px 12px;border-radius:8px;cursor:pointer}nav button.active,nav button:hover{background:#fff1;color:#fff}
-main{padding:24px 28px}.filters,.cards,.grid{display:grid;gap:14px}.filters{grid-template-columns:repeat(4,minmax(150px,1fr));background:var(--panel);padding:16px;border:1px solid var(--line);border-radius:14px;margin-bottom:16px}
-label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}select,input{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--text)}
-.cards{grid-template-columns:repeat(6,minmax(130px,1fr));margin-bottom:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}.k{font-size:12px;color:var(--muted)}.v{font-size:24px;font-weight:750;margin-top:6px}.danger{color:var(--danger)}.warn{color:var(--warn)}.ok{color:var(--ok)}
-.grid{grid-template-columns:2fr 1fr;margin-bottom:16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}.panel h2{font-size:15px;margin:0 0 4px}.hint{font-size:12px;color:var(--muted);margin-bottom:8px}.chart{height:330px}
-.tablewrap{overflow:auto;max-height:540px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{position:sticky;top:0;background:#fafbfc;color:var(--muted);font-weight:650}
-.badge{padding:4px 7px;border-radius:999px;font-size:11px;background:#eef2ff}.btn{border:0;background:#eef2ff;color:#1d4ed8;padding:7px 9px;border-radius:7px;cursor:pointer}.hidden{display:none}.empty{padding:40px;text-align:center;color:var(--muted)}
-@media(max-width:1000px){.cards{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr}.filters{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:620px){header .wrap{align-items:flex-start;flex-direction:column}main{padding:16px}.filters,.cards{grid-template-columns:1fr 1fr}}
-</style></head>
+:root{--bg:#f4f6fa;--panel:#fff;--ink:#182230;--muted:#667085;--line:#e5e7eb;--blue:#2563eb;--red:#dc2626;--orange:#d97706;--green:#059669;--nav:#111827}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.header{background:var(--nav);color:#fff;padding:20px 28px;position:sticky;top:0;z-index:10;box-shadow:0 2px 16px #0002}.head{max-width:1480px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}.title h1{margin:0;font-size:22px}.title p{margin:5px 0 0;color:#aeb8c7;font-size:12px}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav button{border:0;background:transparent;color:#cbd5e1;padding:9px 12px;border-radius:8px;cursor:pointer}nav button.active,nav button:hover{background:#ffffff16;color:#fff}
+main{max-width:1480px;margin:auto;padding:22px 28px}.filters{display:grid;grid-template-columns:2fr repeat(5,1fr);gap:12px;background:var(--panel);border:1px solid var(--line);padding:14px;border-radius:14px;margin-bottom:14px}label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px}input,select{width:100%;height:39px;border:1px solid #d9dee7;border-radius:9px;padding:0 10px;background:#fff;color:var(--ink)}
+.searchbox{position:relative}.hintsearch{font-size:10px;color:var(--muted);margin-top:4px}.suggestions{position:absolute;left:0;right:0;top:72px;background:#fff;border:1px solid var(--line);border-radius:9px;box-shadow:0 8px 25px #0002;z-index:20;max-height:220px;overflow:auto}.suggestions div{padding:9px 11px;cursor:pointer}.suggestions div:hover{background:#f2f5f9}
+.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px}.label{font-size:11px;color:var(--muted)}.value{font-size:23px;font-weight:800;margin-top:6px}.red{color:var(--red)}.orange{color:var(--orange)}.green{color:var(--green)}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}.panel h2{font-size:15px;margin:0}.hint{color:var(--muted);font-size:11px;margin:4px 0 8px}.chart{height:330px}
+.insight{line-height:1.7;font-size:13px}.insight strong{font-size:18px}
+.tablewrap{overflow:auto;max-height:570px;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap;text-align:left}th{position:sticky;top:0;background:#f8fafc;color:var(--muted);z-index:1}.tag{display:inline-block;padding:3px 7px;border-radius:99px;background:#eef2ff;color:#3730a3;font-size:10px;font-weight:700}
+.rowclick{cursor:pointer}.rowclick:hover{background:#f8fafc}.hidden{display:none}.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.clear{border:0;background:#eef2ff;color:#1d4ed8;padding:7px 10px;border-radius:8px;cursor:pointer}.empty{padding:30px;text-align:center;color:var(--muted)}
+.modal{position:fixed;inset:0;background:#0006;z-index:30;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:20px}.modalhead{display:flex;justify-content:space-between;gap:20px}.close{border:0;background:#f1f3f5;border-radius:8px;padding:7px 10px;cursor:pointer}.detailgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.detail{border:1px solid var(--line);border-radius:9px;padding:10px}.detail small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}
+@media(max-width:1150px){.filters{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:650px){main{padding:14px}.filters,.cards{grid-template-columns:1fr 1fr}.head{align-items:flex-start;flex-direction:column}.detailgrid{grid-template-columns:1fr}}
+</style>
+</head>
 <body>
-<header><div class="wrap"><div><h1>Dashboard Financeiro</h1><div class="sub" id="subtitle">Carregando dados…</div></div><nav>
-<button class="active" data-view="overview">Visão geral</button><button data-view="aging">Aging</button><button data-view="partners">Cobrança</button><button data-view="titles">Títulos</button>
-</nav></div></header>
-<main class="wrap">
+<header class="header"><div class="head">
+<div class="title"><h1>Dashboard Financeiro</h1><p id="subtitle">Carregando base...</p></div>
+<nav><button class="active" data-tab="overview">Visão geral</button><button data-tab="collection">Cobrança</button><button data-tab="records">Títulos</button></nav>
+</div></header>
+
+<main>
 <section class="filters">
-<div><label>Buscar parceiro</label><input id="search" placeholder="Nome ou código"></div>
-<div><label>Faixa de atraso</label><select id="agingFilter"><option value="all">Todas</option><option value="future">A vencer</option><option value="0_7">0–7 dias</option><option value="8_30">8–30 dias</option><option value="31_90">31–90 dias</option><option value="91_180">91–180 dias</option><option value="181_365">181–365 dias</option><option value="365p">+365 dias</option></select></div>
-<div><label>Tipo de título</label><select id="titleFilter"><option value="all">Todos</option></select></div>
-<div><label>Renegociado</label><select id="renegFilter"><option value="all">Todos</option><option value="yes">Sim</option><option value="no">Não</option></select></div>
+<div class="searchbox"><label>Buscar parceiro</label><input id="partnerSearch" autocomplete="off" placeholder="Digite qualquer parte do nome..."><div class="hintsearch">Busca sem acento, sem diferenciar maiúsculas/minúsculas e em qualquer trecho do nome.</div><div id="suggestions" class="suggestions" style="display:none"></div></div>
+<div><label>Faixa</label><select id="aging"><option value="all">Todas</option><option value="future">A vencer</option><option value="today">Vence hoje</option><option value="0_7">1–7 dias atraso</option><option value="8_30">8–30 dias</option><option value="31_90">31–90 dias</option><option value="91_180">91–180 dias</option><option value="181_365">181–365 dias</option><option value="365p">+365 dias</option></select></div>
+<div><label>Vendedor</label><select id="seller"><option value="all">Todos</option></select></div>
+<div><label>Tipo de título</label><select id="title"><option value="all">Todos</option></select></div>
+<div><label>Movimento</label><select id="movement"><option value="all">Todos</option></select></div>
+<div><label>Renegociado</label><select id="reneg"><option value="all">Todos</option><option value="yes">Sim</option><option value="no">Não</option></select></div>
 </section>
 
 <section class="cards">
-<div class="card"><div class="k">Carteira</div><div class="v" id="total">—</div></div>
-<div class="card"><div class="k">A vencer</div><div class="v ok" id="future">—</div></div>
-<div class="card"><div class="k">Vencido</div><div class="v danger" id="overdue">—</div></div>
-<div class="card"><div class="k">% vencido</div><div class="v danger" id="pct">—</div></div>
-<div class="card"><div class="k">Títulos</div><div class="v" id="count">—</div></div>
-<div class="card"><div class="k">+365 dias</div><div class="v warn" id="critical">—</div></div>
+<div class="card"><div class="label">Carteira filtrada</div><div class="value" id="total">—</div></div>
+<div class="card"><div class="label">A vencer</div><div class="value green" id="future">—</div></div>
+<div class="card"><div class="label">Vencido</div><div class="value red" id="overdue">—</div></div>
+<div class="card"><div class="label">% vencido</div><div class="value red" id="pct">—</div></div>
+<div class="card"><div class="label">Títulos</div><div class="value" id="count">—</div></div>
+<div class="card"><div class="label">+365 dias</div><div class="value orange" id="critical">—</div></div>
 </section>
 
 <section id="overview">
 <div class="grid">
-<div class="panel"><h2>Distribuição por faixa</h2><div class="hint">Valor da carteira após os filtros</div><div class="chart" id="agingChart"></div></div>
-<div class="panel"><h2>Tipos de título</h2><div class="hint">Concentração por valor</div><div class="chart" id="titleChart"></div></div>
+<div class="panel"><h2>Aging — dias para vencer / dias em atraso</h2><div class="hint">Negativo = dias para vencer • positivo = dias vencido</div><div id="agingChart" class="chart"></div></div>
+<div class="panel"><h2>Carteira por tipo de título</h2><div class="hint">Valor total dos títulos filtrados</div><div id="titleChart" class="chart"></div></div>
 </div>
 <div class="grid">
-<div class="panel"><h2>Top parceiros por valor vencido</h2><div class="hint">Clique em um parceiro para filtrar</div><div class="chart" id="partnerChart"></div></div>
-<div class="panel"><h2>Resumo automático</h2><div id="insight" style="line-height:1.65;padding-top:12px"></div></div>
+<div class="panel"><h2>Top parceiros por valor vencido</h2><div class="hint">Clique em uma barra para filtrar o parceiro</div><div id="partnerChart" class="chart"></div></div>
+<div class="panel"><h2>Leitura executiva</h2><div id="insight" class="insight"></div></div>
 </div>
 </section>
 
-<section id="details" class="panel hidden">
-<h2 id="detailTitle">Detalhes</h2><div class="hint">Registros da seleção atual</div>
-<div class="tablewrap"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+<section id="collection" class="panel hidden">
+<div class="toolbar"><div><h2>Central de Cobrança</h2><div class="hint">Parceiros ordenados pelo valor vencido</div></div><button class="clear" onclick="clearPartner()">Limpar busca</button></div>
+<div class="tablewrap"><table><thead><tr><th>Parceiro</th><th>Vencido</th><th>Títulos</th><th>Maior atraso</th><th>Vendedor</th></tr></thead><tbody id="collectionBody"></tbody></table></div>
+</section>
+
+<section id="records" class="panel hidden">
+<div class="toolbar"><div><h2>Títulos</h2><div class="hint">Clique em qualquer linha para abrir os detalhes</div></div></div>
+<div class="tablewrap"><table><thead id="recordsHead"></thead><tbody id="recordsBody"></tbody></table></div>
 </section>
 </main>
+
+<div id="modal" class="modal"><div class="modalbox"><div class="modalhead"><div><h2 id="modalTitle" style="margin:0"></h2><div id="modalSub" class="hint"></div></div><button class="close" onclick="closeModal()">Fechar</button></div><div id="modalBody" class="detailgrid"></div></div></div>
+
 <script>
-const state={rows:[],filtered:[],keys:{}};
+const S={rows:[],filtered:[],keys:{},charts:{}};
 const $=id=>document.getElementById(id);
-const brl=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(n||0);
-const num=n=>new Intl.NumberFormat('pt-BR').format(n||0);
-const pick=(keys, patterns)=>keys.find(k=>patterns.some(p=>k.includes(p)));
-function normalize(v){return String(v??'').trim().toLowerCase()}
-function toNum(v){if(typeof v==='number')return v||0; if(v==null)return 0; let s=String(v).replace(/\s/g,''); if(s.includes(',')&&s.includes('.'))s=s.replace(/\./g,'').replace(',','.'); else s=s.replace(',','.'); let x=Number(s); return isNaN(x)?0:x}
-function days(r){let k=state.keys.days; if(k&&r[k]!=null)return toNum(r[k]); let dk=state.keys.due; if(!dk)return 0; let d=new Date(r[dk]); if(isNaN(d))return 0; return Math.floor((Date.now()-d.getTime())/86400000)}
-function amount(r){return toNum(r[state.keys.amount])}
-function partner(r){return r[state.keys.partner]??'Sem parceiro'}
-function title(r){return r[state.keys.title]??'Sem tipo'}
-function agingBucket(d){if(d<=0)return 'A vencer'; if(d<=7)return '0–7'; if(d<=30)return '8–30'; if(d<=90)return '31–90'; if(d<=180)return '91–180'; if(d<=365)return '181–365'; return '+365'}
-function match(r){
- const s=normalize($('search').value); if(s&&!normalize(partner(r)).includes(s))return false;
- const a=$('agingFilter').value,d=days(r);
- if(a==='future'&&d>0)return false;if(a==='0_7'&&(d<1||d>7))return false;if(a==='8_30'&&(d<8||d>30))return false;
- if(a==='31_90'&&(d<31||d>90))return false;if(a==='91_180'&&(d<91||d>180))return false;if(a==='181_365'&&(d<181||d>365))return false;if(a==='365p'&&d<=365)return false;
- const tf=$('titleFilter').value;if(tf!=='all'&&String(title(r))!==tf)return false;
- const rf=$('renegFilter').value;if(rf!=='all'){const v=normalize(r[state.keys.reneg]);const yes=['sim','s','yes','true','1'].includes(v);if(rf==='yes'&&!yes)return false;if(rf==='no'&&yes)return false}
+const money=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(n||0);
+const integer=n=>new Intl.NumberFormat('pt-BR').format(n||0);
+const norm=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const val=(r,k)=>r[k];
+const num=v=>{if(typeof v==='number')return v||0; let s=String(v??'').trim().replace(/\s/g,''); if(s.includes(',')&&s.includes('.'))s=s.replace(/\./g,'').replace(',','.'); else s=s.replace(',','.'); let n=Number(s); return isNaN(n)?0:n};
+function bucket(d){if(d<0)return 'A vencer';if(d===0)return 'Vence hoje';if(d<=7)return '1–7';if(d<=30)return '8–30';if(d<=90)return '31–90';if(d<=180)return '91–180';if(d<=365)return '181–365';return '+365'}
+function days(r){return num(r[S.keys.delay])}
+function amount(r){return num(r[S.keys.amount])}
+function partner(r){return r[S.keys.partner]??'Sem parceiro'}
+function title(r){return r[S.keys.title]??'Sem título'}
+function seller(r){return r[S.keys.seller]??'Sem vendedor'}
+function isReneg(r){let x=norm(r[S.keys.reneg]);return ['sim','s','yes','true','1'].includes(x)}
+function uniqueOptions(key){return [...new Set(S.rows.map(r=>String(r[key]??'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'))}
+function fillSelect(id,key){uniqueOptions(key).forEach(x=>{let o=document.createElement('option');o.value=x;o.textContent=x;$(id).appendChild(o)})}
+function matches(r){
+ const q=norm($('partnerSearch').value);
+ // Deliberately substring-based: "silva" finds "JOAO DA SILVA", "fernando" finds "FERNANDO ARANTES..." etc.
+ if(q&&!norm(partner(r)).includes(q))return false;
+ let a=$('aging').value,d=days(r);
+ if(a==='future'&&d>=0)return false;if(a==='today'&&d!==0)return false;
+ if(a==='0_7'&&(d<1||d>7))return false;if(a==='8_30'&&(d<8||d>30))return false;if(a==='31_90'&&(d<31||d>90))return false;
+ if(a==='91_180'&&(d<91||d>180))return false;if(a==='181_365'&&(d<181||d>365))return false;if(a==='365p'&&d<=365)return false;
+ if($('seller').value!=='all'&&String(seller(r))!==$('seller').value)return false;
+ if($('title').value!=='all'&&String(title(r))!==$('title').value)return false;
+ if($('movement').value!=='all'&&String(r[S.keys.movement]??'')!==$('movement').value)return false;
+ let rr=$('reneg').value;if(rr==='yes'&&!isReneg(r))return false;if(rr==='no'&&isReneg(r))return false;
  return true;
 }
 function setCards(rows){
- const total=rows.reduce((a,r)=>a+amount(r),0), fut=rows.filter(r=>days(r)<=0).reduce((a,r)=>a+amount(r),0), ov=total-fut, crit=rows.filter(r=>days(r)>365).reduce((a,r)=>a+amount(r),0);
- $('total').textContent=brl(total);$('future').textContent=brl(fut);$('overdue').textContent=brl(ov);$('pct').textContent=(total?((ov/total)*100).toFixed(1):'0')+'%';$('count').textContent=num(rows.length);$('critical').textContent=brl(crit);
+ let total=rows.reduce((a,r)=>a+amount(r),0),future=rows.filter(r=>days(r)<0).reduce((a,r)=>a+amount(r),0),over=rows.filter(r=>days(r)>=0).reduce((a,r)=>a+amount(r),0),crit=rows.filter(r=>days(r)>365).reduce((a,r)=>a+amount(r),0);
+ $('total').textContent=money(total);$('future').textContent=money(future);$('overdue').textContent=money(over);$('pct').textContent=(total?(over/total*100):0).toFixed(1)+'%';$('count').textContent=integer(rows.length);$('critical').textContent=money(crit);
 }
-function chart(id,option){let el=$(id),c=echarts.getInstanceByDom(el)||echarts.init(el);c.setOption(option,true);window.addEventListener('resize',()=>c.resize())}
+function draw(id,opt){let e=$(id),c=S.charts[id]||echarts.init(e);S.charts[id]=c;c.setOption(opt,true);c.resize()}
+function renderCharts(){
+ const b=['A vencer','Vence hoje','1–7','8–30','31–90','91–180','181–365','+365'];
+ const bv=b.map(x=>S.filtered.filter(r=>bucket(days(r))===x).reduce((a,r)=>a+amount(r),0));
+ draw('agingChart',{tooltip:{trigger:'axis',valueFormatter:money},grid:{left:45,right:20,top:15,bottom:45},xAxis:{type:'category',data:b,axisLabel:{rotate:25}},yAxis:{type:'value',axisLabel:{formatter:v=>money(v)}},series:[{type:'bar',data:bv,barMaxWidth:45,itemStyle:{borderRadius:[6,6,0,0]}}]});
+ let tm={};S.filtered.forEach(r=>tm[title(r)]=(tm[title(r)]||0)+amount(r));let tt=Object.entries(tm).sort((a,b)=>b[1]-a[1]);
+ draw('titleChart',{tooltip:{trigger:'item',formatter:p=>esc(p.name)+'<br>'+money(p.value)+' ('+p.percent.toFixed(1)+'%)'},series:[{type:'pie',radius:['42%','73%'],data:tt.map(x=>({name:x[0],value:x[1]}))}]});
+ let pm={};S.filtered.forEach(r=>{if(days(r)>0)pm[partner(r)]=(pm[partner(r)]||0)+amount(r)});let pp=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,12).reverse();
+ draw('partnerChart',{tooltip:{trigger:'axis',valueFormatter:money},grid:{left:160,right:20,top:10,bottom:20},xAxis:{type:'value',axisLabel:{formatter:v=>money(v)}},yAxis:{type:'category',data:pp.map(x=>x[0]),axisLabel:{width:145,overflow:'truncate'}},series:[{type:'bar',data:pp.map(x=>x[1]),barMaxWidth:24,itemStyle:{borderRadius:[0,6,6,0]}}]});
+ S.charts.partnerChart.off('click');S.charts.partnerChart.on('click',p=>{ $('partnerSearch').value=p.name;render();});
+ const total=S.filtered.reduce((a,r)=>a+amount(r),0),over=S.filtered.filter(r=>days(r)>0).reduce((a,r)=>a+amount(r),0),crit=S.filtered.filter(r=>days(r)>365).reduce((a,r)=>a+amount(r),0);
+ let pm2={};S.filtered.forEach(r=>{if(days(r)>0)pm2[partner(r)]=(pm2[partner(r)]||0)+amount(r)});let top=Object.entries(pm2).sort((a,b)=>b[1]-a[1])[0];
+ $('insight').innerHTML=`<p><strong>${integer(S.filtered.length)}</strong> títulos na seleção, somando <strong>${money(total)}</strong>.</p>
+ <p>O valor vencido é <strong class="red">${money(over)}</strong> (${total?(over/total*100).toFixed(1):0}%).</p>
+ <p>A faixa <strong class="orange">+365 dias</strong> concentra <strong>${money(crit)}</strong>.</p>
+ <p>${top?`Maior concentração de atraso: <strong>${esc(top[0])}</strong>, com <strong>${money(top[1])}</strong>.`:'Não há títulos vencidos nesta seleção.'}</p>`;
+}
+function renderCollection(){
+ let m={};S.filtered.forEach(r=>{let p=partner(r);if(!m[p])m[p]={amount:0,count:0,max:0,seller:seller(r)};if(days(r)>0){m[p].amount+=amount(r);m[p].max=Math.max(m[p].max,days(r));}m[p].count++});
+ let rows=Object.entries(m).filter(x=>x[1].amount>0).sort((a,b)=>b[1].amount-a[1].amount).slice(0,500);
+ $('collectionBody').innerHTML=rows.length?rows.map(([p,x])=>`<tr class="rowclick" onclick="choosePartner('${encodeURIComponent(p)}')"><td>${esc(p)}</td><td class="red">${money(x.amount)}</td><td>${integer(x.count)}</td><td>${integer(x.max)} dias</td><td>${esc(x.seller)}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Nenhum parceiro com atraso nos filtros atuais.</td></tr>';
+}
+function choosePartner(encoded){$('partnerSearch').value=decodeURIComponent(encoded);switchTab('overview');render()}
+function renderRecords(){
+ let keys=Object.keys(S.rows[0]||{});$('recordsHead').innerHTML='<tr>'+keys.map(k=>`<th>${esc(k)}</th>`).join('')+'<th>Faixa</th></tr>';
+ $('recordsBody').innerHTML=S.filtered.slice(0,1000).map((r,i)=>`<tr class="rowclick" onclick="openDetail(${S.filtered.indexOf(r)})">${keys.map(k=>`<td>${esc(r[k])}</td>`).join('')}<td><span class="tag">${bucket(days(r))}</span></td></tr>`).join('')||'<tr><td colspan="20" class="empty">Nenhum registro.</td></tr>';
+}
 function render(){
- state.filtered=state.rows.filter(match);setCards(state.filtered);
- const buckets=['A vencer','0–7','8–30','31–90','91–180','181–365','+365'];let av=buckets.map(b=>state.filtered.filter(r=>agingBucket(days(r))===b).reduce((a,r)=>a+amount(r),0));
- chart('agingChart',{tooltip:{trigger:'axis',valueFormatter:brl},xAxis:{type:'category',data:buckets},yAxis:{type:'value'},series:[{type:'bar',data:av,itemStyle:{borderRadius:[5,5,0,0]}}]});
- let tm={};state.filtered.forEach(r=>tm[title(r)]=(tm[title(r)]||0)+amount(r));let topT=Object.entries(tm).sort((a,b)=>b[1]-a[1]).slice(0,10);
- chart('titleChart',{tooltip:{trigger:'item',formatter:p=>p.name+'<br>'+brl(p.value)},series:[{type:'pie',radius:['42%','72%'],data:topT.map(x=>({name:x[0],value:x[1]}))}]});
- let pm={};state.filtered.forEach(r=>{let d=days(r);if(d>0)pm[partner(r)]=(pm[partner(r)]||0)+amount(r)});let topP=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,10).reverse();
- chart('partnerChart',{tooltip:{trigger:'axis',valueFormatter:brl},grid:{left:110,right:20,top:10,bottom:25},xAxis:{type:'value'},yAxis:{type:'category',data:topP.map(x=>x[0])},series:[{type:'bar',data:topP.map(x=>x[1]),itemStyle:{borderRadius:[0,5,5,0]}}]});
- const total=state.filtered.reduce((a,r)=>a+amount(r),0),ov=state.filtered.filter(r=>days(r)>0).reduce((a,r)=>a+amount(r),0),crit=state.filtered.filter(r=>days(r)>365).reduce((a,r)=>a+amount(r),0);
- const best=Object.entries(pm).sort((a,b)=>b[1]-a[1])[0];
- $('insight').innerHTML=`<b>${num(state.filtered.length)}</b> títulos somam <b>${brl(total)}</b>.<br><br>O vencido representa <b>${brl(ov)}</b> (${total?(ov/total*100).toFixed(1):0}%).<br><br>O atraso superior a 365 dias soma <b>${brl(crit)}</b>.<br><br>${best?`Maior concentração de vencido: <b>${best[0]}</b>, com <b>${brl(best[1])}</b>.`:'Não há títulos vencidos nos filtros atuais.'}`;
- renderTable();
+ S.filtered=S.rows.filter(matches);setCards(S.filtered);renderCharts();renderCollection();renderRecords();
+ $('subtitle').textContent=`Base: ${integer(S.rows.length)} registros • ${integer(new Set(S.rows.map(partner)).size)} parceiros • esquema conferido com a planilha`;
 }
-function renderTable(){
- const rows=state.filtered.slice(0,500), keys=Object.keys(state.rows[0]||{});
- $('thead').innerHTML='<tr>'+keys.map(k=>`<th>${k.replaceAll('_',' ')}</th>`).join('')+'<th>Atraso</th></tr>';
- $('tbody').innerHTML=rows.map(r=>'<tr>'+keys.map(k=>`<td>${r[k]??''}</td>`).join('')+`<td><span class="badge">${days(r)>0?days(r)+' dias':'A vencer'}</span></td></tr>`).join('');
- $('detailTitle').textContent=`Detalhes — ${num(state.filtered.length)} registros`;
+function switchTab(tab){
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ $('overview').classList.toggle('hidden',tab!=='overview');$('collection').classList.toggle('hidden',tab!=='collection');$('records').classList.toggle('hidden',tab!=='records');
+ setTimeout(()=>Object.values(S.charts).forEach(c=>c.resize()),50);
 }
-function setup(){
- const keys=Object.keys(state.rows[0]||{});state.keys.amount=pick(keys,['valor','vlr','montante','total']);state.keys.partner=pick(keys,['parceiro','cliente','sacado','nome']);state.keys.title=pick(keys,['tipo_de_titulo','tipo_titulo','titulo','tipo']);state.keys.days=pick(keys,['dias_de_atraso','dias_atraso','atraso']);state.keys.due=pick(keys,['vencimento','data_de_vencimento','dt_venc']);
- if(!state.keys.amount)state.keys.amount=keys.find(k=>state.rows.slice(0,100).some(r=>typeof r[k]==='number'))||keys[0];
- const vals=[...new Set(state.rows.map(r=>title(r)).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pt-BR'));vals.forEach(v=>{let o=document.createElement('option');o.value=v;o.textContent=v;$('titleFilter').appendChild(o)});
- $('subtitle').textContent=`${num(state.rows.length)} registros • dados carregados localmente no navegador`;
- ['search','agingFilter','titleFilter','renegFilter'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',render));
- document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('details').classList.toggle('hidden',b.dataset.view!=='titles');});
+function clearPartner(){$('partnerSearch').value='';render()}
+function openDetail(i){
+ let r=S.filtered[i];if(!r)return;let keys=Object.keys(r);$('modalTitle').textContent=partner(r);$('modalSub').textContent=`Documento ${r[S.keys.document]??'—'} • ${bucket(days(r))} • ${days(r)>0?days(r)+' dias de atraso':Math.abs(days(r))+' dias para vencer'}`;
+ $('modalBody').innerHTML=keys.map(k=>`<div class="detail"><small>${esc(k)}</small><b>${esc(r[k])}</b></div>`).join('');$('modal').classList.add('show');
+}
+function closeModal(){$('modal').classList.remove('show')}
+function suggest(){
+ const q=norm($('partnerSearch').value),box=$('suggestions');if(q.length<2){box.style.display='none';return}
+ const names=[...new Set(S.rows.map(partner))].filter(p=>norm(p).includes(q)).slice(0,12);
+ box.innerHTML=names.map(p=>`<div onclick="selectSuggestion('${encodeURIComponent(p)}')">${esc(p)}</div>`).join('');box.style.display=names.length?'block':'none';
+}
+function selectSuggestion(p){$('partnerSearch').value=decodeURIComponent(p);$('suggestions').style.display='none';render()}
+fetch('data.json').then(r=>r.json()).then(rows=>{
+ S.rows=rows;
+ const keys=Object.keys(rows[0]||{});S.keys={partner:'PARCEIRO',date:'DATA',due:'VENCIMENTO',delay:'ATRASO',document:'DOCUMENTO',seller:'VENDEDOR',amount:'VALOR',movement:'MOVIMENTO',reneg:'Renegociados ?',bank:'Banco',title:'TITULO',history:'Histórico'};
+ // Validate against the source headers instead of guessing by position.
+ const missing=Object.values(S.keys).filter(k=>!keys.includes(k));if(missing.length)throw new Error('Cabeçalhos ausentes: '+missing.join(', '));
+ fillSelect('seller',S.keys.seller);fillSelect('title',S.keys.title);fillSelect('movement',S.keys.movement);
+ ['partnerSearch','aging','seller','title','movement','reneg'].forEach(id=>$(id).addEventListener(id==='partnerSearch'?'input':'change',()=>{if(id==='partnerSearch')suggest();else render()}));
+ document.addEventListener('click',e=>{if(!e.target.closest('.searchbox'))$('suggestions').style.display='none'});
+ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
  render();
-}
-fetch('data.json').then(r=>r.json()).then(d=>{state.rows=d;setup()}).catch(e=>{$('subtitle').textContent='Erro ao carregar data.json';console.error(e)});
-</script></body></html>
+}).catch(e=>{console.error(e);$('subtitle').textContent='Erro ao carregar a base: '+e.message});
+</script>
+</body>
+</html>

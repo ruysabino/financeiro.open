@@ -1,26 +1,50 @@
-# Dashboard Financeiro
+# Dashboard Financeiro — V2
 
-Dashboard web estático para GitHub Pages.
+Versão aprimorada para GitHub Pages, construída diretamente a partir da aba `DADOS` de `Financeiro(1).ods`.
 
-## Estrutura
+## Cabeçalhos conferidos
 
-- `index.html` — aplicação
-- `data.json` — dados tratados a partir do Financeiro.ods
-- `metadata.json` — metadados da importação
+A aplicação usa os nomes reais dos cabeçalhos e não depende da posição das colunas:
 
-## Publicação no GitHub Pages
+- PARCEIRO
+- DATA
+- VENCIMENTO
+- ATRASO
+- DOCUMENTO
+- VENDEDOR
+- VALOR
+- MOVIMENTO
+- Renegociados ?
+- Banco
+- TITULO
+- Histórico
 
-1. Crie um repositório no GitHub.
-2. Envie estes arquivos para a raiz do repositório.
-3. Vá em **Settings → Pages**.
-4. Em **Build and deployment**, selecione **Deploy from a branch**.
-5. Selecione `main` e a pasta `/ (root)`.
-6. Salve e aguarde a publicação.
+## Busca de parceiro
 
-## Segurança
+A busca é por **qualquer trecho do nome**, sem diferenciar maiúsculas/minúsculas ou acentos. Exemplos:
 
-O `data.json` contém os dados da planilha. Não publique este repositório como público se os dados financeiros não puderem ser expostos. Para uso interno, prefira repositório privado ou hospedagem com autenticação.
+- `silva` encontra `JOAO DA SILVA`
+- `fernando` encontra qualquer parceiro com Fernando
+- `monteiro da` encontra nomes que contenham esse trecho
 
-## Atualização
+Há também sugestões automáticas enquanto o usuário digita.
 
-Para atualizar os dados nesta primeira versão, substitua `data.json` por uma nova exportação tratada. A interface foi feita para inferir os principais campos da base.
+## Faixa de atraso
+
+A coluna `ATRASO` é usada como fonte oficial:
+
+- negativo = dias para vencer
+- zero = vence hoje
+- positivo = dias vencido
+
+Faixas: A vencer, hoje, 1–7, 8–30, 31–90, 91–180, 181–365 e +365.
+
+## Publicação
+
+Envie `index.html`, `data.json`, `schema.json` e `README.md` para o repositório e ative GitHub Pages em:
+
+Settings → Pages → Deploy from a branch → main → / (root)
+
+## Privacidade
+
+`data.json` contém os dados financeiros. Não publique o repositório como público se a base não puder ser exposta.

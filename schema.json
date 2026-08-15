@@ -1,0 +1,67 @@
+{
+  "source_file": "Financeiro(1).ods",
+  "sheet": "DADOS",
+  "rows": 13485,
+  "columns": [
+    {
+      "name": "PARCEIRO",
+      "role": "Parceiro / cliente",
+      "type": "text"
+    },
+    {
+      "name": "DATA",
+      "role": "Data de emissão / lançamento",
+      "type": "date"
+    },
+    {
+      "name": "VENCIMENTO",
+      "role": "Data de vencimento",
+      "type": "date"
+    },
+    {
+      "name": "ATRASO",
+      "role": "Dias: positivo = vencido; zero = vence hoje; negativo = dias para vencer",
+      "type": "number"
+    },
+    {
+      "name": "DOCUMENTO",
+      "role": "Número / identificação do documento",
+      "type": "text"
+    },
+    {
+      "name": "VENDEDOR",
+      "role": "Vendedor responsável",
+      "type": "text"
+    },
+    {
+      "name": "VALOR",
+      "role": "Valor financeiro do título",
+      "type": "currency"
+    },
+    {
+      "name": "MOVIMENTO",
+      "role": "Tipo de movimento",
+      "type": "text"
+    },
+    {
+      "name": "Renegociados ?",
+      "role": "Indicador de renegociação",
+      "type": "text"
+    },
+    {
+      "name": "Banco",
+      "role": "Banco",
+      "type": "text"
+    },
+    {
+      "name": "TITULO",
+      "role": "Tipo de título",
+      "type": "text"
+    },
+    {
+      "name": "Histórico",
+      "role": "Histórico / descrição",
+      "type": "text"
+    }
+  ]
+}
