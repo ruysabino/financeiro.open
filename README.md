@@ -30,3 +30,12 @@ Arquivos:
 - logo.png
 - printer.png
 - pdf.png
+
+
+## Paleta visual corporativa
+
+Baseada nas cores fornecidas:
+- Verde Esmeralda Corporativo: `#00A19C`
+- Cinza Escuro: `#565F64`
+
+A interface usa variações dessas duas cores para navegação, cartões, filtros, estados, cruzamentos, tabelas e impressão/PDF.
