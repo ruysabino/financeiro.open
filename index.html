@@ -239,7 +239,7 @@ footer{max-width:1520px;margin:10px auto 30px;padding:0 28px;color:var(--muted);
     <div><h2>Central de Cobrança</h2><div class="hint">Parceiros ordenados pelo valor vencido, na seleção atual</div></div>
     <div class="table-actions">
       <button class="icon-btn" title="Imprimir cobrança" aria-label="Imprimir cobrança" onclick="printGrid('collection')"><img src="printer.png" alt=""></button>
-      <button class="icon-btn" title="Salvar cobrança em PDF" aria-label="Salvar cobrança em PDF" onclick="printGrid('collection')"><img src="pdf.png" alt=""></button>
+      <button class="icon-btn" title="Salvar cobrança em PDF" aria-label="Salvar cobrança em PDF" onclick="printGrid('collection','pdf')"><img src="pdf.png" alt=""></button>
       <button class="btn" onclick="clearPartner()">Limpar busca de parceiro</button>
     </div>
   </div>
@@ -251,7 +251,7 @@ footer{max-width:1520px;margin:10px auto 30px;padding:0 28px;color:var(--muted);
     <div><h2>Títulos</h2><div class="hint">Clique em qualquer linha para ver os detalhes completos (mostrando os primeiros 1000 da seleção)</div></div>
     <div class="table-actions">
       <button class="icon-btn" title="Imprimir títulos" aria-label="Imprimir títulos" onclick="printGrid('records')"><img src="printer.png" alt=""></button>
-      <button class="icon-btn" title="Salvar títulos em PDF" aria-label="Salvar títulos em PDF" onclick="printGrid('records')"><img src="pdf.png" alt=""></button>
+      <button class="icon-btn" title="Salvar títulos em PDF" aria-label="Salvar títulos em PDF" onclick="printGrid('records','pdf')"><img src="pdf.png" alt=""></button>
     </div>
   </div>
   <div class="tablewrap"><table class="data"><thead id="recordsHead"></thead><tbody id="recordsBody"></tbody></table></div>
@@ -359,7 +359,7 @@ function renderCharts(){
       {name:'Vencidos',type:'bar',data:overdueVals,barMaxWidth:28}
     ]});
 
-  {};S.filtered.forEach(r=>mv[movement(r)]=(mv[movement(r)]||0)+amount(r));let mt=Object.entries(mv).sort((a,b)=>b[1]-a[1]);
+  let mv={};S.filtered.forEach(r=>mv[movement(r)]=(mv[movement(r)]||0)+amount(r));let mt=Object.entries(mv).sort((a,b)=>b[1]-a[1]);
   draw('movChart',{tooltip:{trigger:'item',formatter:p=>esc(p.name)+'<br>'+money(p.value)+' ('+p.percent.toFixed(1)+'%)'},
     color:['#0f766e','#14b8a6','#5eead4','#d97706','#dc2626','#94a3b8','#334155'],
     series:[{type:'pie',radius:['42%','73%'],label:{fontSize:10,formatter:'{b}: {d}%'},data:mt.map(x=>({name:x[0],value:x[1]}))}]});
@@ -545,10 +545,10 @@ function renderRecords(){
   }).join('')||'<tr><td colspan="20" class="empty">Nenhum registro para os filtros atuais.</td></tr>';
 }
 
-function printGrid(grid){
+function printGrid(grid,mode){
   const isCollection=grid==='collection';
   const title=isCollection?'Central de Cobrança':'Títulos';
-  const sourceTable=isCollection?$('collectionHead').parentElement:$('recordsHead').parentElement;
+  const sourceTable=isCollection?$('collectionHead').closest('table'):$('recordsHead').closest('table');
   const rows=[...sourceTable.querySelectorAll('tr')].map(tr=>[...tr.cells].map(td=>td.innerText.trim()));
   if(!rows.length)return;
   const head=rows.shift();
