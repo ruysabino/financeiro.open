@@ -1,57 +1,23 @@
-# Dashboard Financeiro — V2
+# Dashboard Financeiro — V2 Clean
 
-Versão aprimorada para GitHub Pages, construída diretamente a partir da aba `DADOS` de `Financeiro(1).ods`.
+Versão V2 mantida como escopo principal.
 
-## Cabeçalhos conferidos
+## Alterações desta versão
 
-A aplicação usa os nomes reais dos cabeçalhos e não depende da posição das colunas:
-
-- PARCEIRO
-- DATA
-- VENCIMENTO
-- ATRASO
-- DOCUMENTO
-- VENDEDOR
-- VALOR
-- MOVIMENTO
-- Renegociados ?
-- Banco
-- TITULO
-- Histórico
-
-## Busca de parceiro
-
-A busca é por **qualquer trecho do nome**, sem diferenciar maiúsculas/minúsculas ou acentos. Exemplos:
-
-- `silva` encontra `JOAO DA SILVA`
-- `fernando` encontra qualquer parceiro com Fernando
-- `monteiro da` encontra nomes que contenham esse trecho
-
-Há também sugestões automáticas enquanto o usuário digita.
-
-## Faixa de atraso
-
-A coluna `ATRASO` é usada como fonte oficial:
-
-- negativo = dias para vencer
-- zero = vence hoje
-- positivo = dias vencido
-
-Faixas: A vencer, hoje, 1–7, 8–30, 31–90, 91–180, 181–365 e +365.
+- Mantido o dashboard e a navegação da V2.
+- Removida a grade analítica permanente, que deixava a página pesada.
+- Adicionado botão **Imprimir / Salvar PDF**.
+- A grade analítica é criada **somente quando o usuário clica no botão**, em uma janela própria de impressão.
+- O relatório de impressão usa os filtros atuais.
+- Adicionado botão **Limpar todos os filtros**.
+- A busca de parceiro continua sendo por qualquer trecho do nome, sem diferenciar maiúsculas/minúsculas ou acentos.
 
 ## Publicação
 
-Envie `index.html`, `data.json`, `schema.json` e `README.md` para o repositório e ative GitHub Pages em:
+Substitua o `index.html` e `data.json` do repositório atual por estes arquivos. O `schema.json` e o README também podem ser substituídos.
 
-Settings → Pages → Deploy from a branch → main → / (root)
+## PDF / Impressão
 
-## Privacidade
+Clique em **Imprimir / Salvar PDF**. O navegador abrirá uma versão leve do relatório com os registros da seleção atual. No diálogo de impressão, escolha **Salvar como PDF** ou sua impressora.
 
-`data.json` contém os dados financeiros. Não publique o repositório como público se a base não puder ser exposta.
-
-
-## V3 — Grade analítica e PDF
-
-A V3 adiciona uma grade analítica abaixo do dashboard. Ela respeita todos os filtros atuais e mostra os registros correspondentes.
-
-O botão **Imprimir / Salvar PDF** abre a impressão do navegador em formato A4 paisagem, ocultando o restante do dashboard e imprimindo somente a grade analítica. No diálogo do navegador, escolha **Salvar como PDF** para gerar o arquivo.
+Se o navegador bloquear a nova janela, permita pop-ups para o domínio do dashboard.

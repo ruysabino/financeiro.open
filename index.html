@@ -20,24 +20,6 @@ main{max-width:1480px;margin:auto;padding:22px 28px}.filters{display:grid;grid-t
 .modal{position:fixed;inset:0;background:#0006;z-index:30;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:20px}.modalhead{display:flex;justify-content:space-between;gap:20px}.close{border:0;background:#f1f3f5;border-radius:8px;padding:7px 10px;cursor:pointer}.detailgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.detail{border:1px solid var(--line);border-radius:9px;padding:10px}.detail small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}
 @media(max-width:1150px){.filters{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr}}
 @media(max-width:650px){main{padding:14px}.filters,.cards{grid-template-columns:1fr 1fr}.head{align-items:flex-start;flex-direction:column}.detailgrid{grid-template-columns:1fr}}
-
-.printbar{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 15px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:15px}.printbar strong{font-size:14px}.printbar span{color:var(--muted);font-size:11px;margin-left:8px}.printactions{display:flex;gap:8px}.printbtn{border:0;background:#111827;color:#fff;padding:9px 13px;border-radius:9px;cursor:pointer;font-weight:700}.printbtn:hover{opacity:.9}.grid-meta{font-size:11px;color:var(--muted)}.analytical-panel{margin-bottom:20px}.analytical-wrap{max-height:650px}.analytical-panel table{font-size:12px}.analytical-panel th{background:#f3f6fa}.analytical-panel td{max-width:260px;overflow:hidden;text-overflow:ellipsis}.analytical-panel .rowclick:hover{background:#eef4ff}
-@media print{
-  @page{size:A4 landscape;margin:10mm}
-  body{background:#fff!important;color:#111!important}
-  .header,.filters,.cards,.printbar,nav,#overview,#collection,#records,.modal{display:none!important}
-  main{max-width:none!important;padding:0!important;margin:0!important}
-  #analytical{display:block!important;border:0!important;box-shadow:none!important;padding:0!important}
-  .analytical-panel{display:block!important}
-  .analytical-wrap{max-height:none!important;overflow:visible!important;border:0!important}
-  .analytical-panel h2{font-size:16px;margin-bottom:3px}
-  .analytical-panel .hint{font-size:9px;margin-bottom:8px}
-  .analytical-panel table{font-size:8px;width:100%}
-  .analytical-panel th,.analytical-panel td{padding:4px 5px;white-space:normal;max-width:none;overflow:visible;text-overflow:clip}
-  .analytical-panel thead{display:table-header-group}
-  .analytical-panel tr{page-break-inside:avoid}
-  .grid-meta{font-size:9px}
-}
 </style>
 </head>
 <body>
@@ -54,16 +36,7 @@ main{max-width:1480px;margin:auto;padding:22px 28px}.filters{display:grid;grid-t
 <div><label>Tipo de título</label><select id="title"><option value="all">Todos</option></select></div>
 <div><label>Movimento</label><select id="movement"><option value="all">Todos</option></select></div>
 <div><label>Renegociado</label><select id="reneg"><option value="all">Todos</option><option value="yes">Sim</option><option value="no">Não</option></select></div>
-</section>
-
-<section class="printbar">
-  <div>
-    <strong>Grade analítica</strong>
-    <span id="printSummary">Registros conforme os filtros atuais</span>
-  </div>
-  <div class="printactions">
-    <button class="printbtn" onclick="printAnalyticalGrid()">🖨️ Imprimir / Salvar PDF</button>
-  </div>
+<div style="display:flex;align-items:end"><button class="clearfilters" onclick="clearAllFilters()">↺ Limpar todos os filtros</button></div>
 </section>
 
 <section class="cards">
@@ -76,6 +49,7 @@ main{max-width:1480px;margin:auto;padding:22px 28px}.filters{display:grid;grid-t
 </section>
 
 <section id="overview">
+<div class="overview-actions"><button class="printbtn" onclick="printCurrentData()">🖨 Imprimir / Salvar PDF</button></div>
 <div class="grid">
 <div class="panel"><h2>Aging — dias para vencer / dias em atraso</h2><div class="hint">Negativo = dias para vencer • positivo = dias vencido</div><div id="agingChart" class="chart"></div></div>
 <div class="panel"><h2>Carteira por tipo de título</h2><div class="hint">Valor total dos títulos filtrados</div><div id="titleChart" class="chart"></div></div>
@@ -94,22 +68,6 @@ main{max-width:1480px;margin:auto;padding:22px 28px}.filters{display:grid;grid-t
 <section id="records" class="panel hidden">
 <div class="toolbar"><div><h2>Títulos</h2><div class="hint">Clique em qualquer linha para abrir os detalhes</div></div></div>
 <div class="tablewrap"><table><thead id="recordsHead"></thead><tbody id="recordsBody"></tbody></table></div>
-</section>
-
-<section id="analytical" class="panel analytical-panel">
-  <div class="toolbar">
-    <div>
-      <h2>Grade analítica</h2>
-      <div class="hint">A grade acompanha exatamente os filtros aplicados ao dashboard. Clique em uma linha para ver todos os campos.</div>
-    </div>
-    <div class="grid-meta" id="gridMeta"></div>
-  </div>
-  <div class="tablewrap analytical-wrap">
-    <table id="analyticalTable">
-      <thead></thead>
-      <tbody></tbody>
-    </table>
-  </div>
 </section>
 </main>
 
@@ -179,7 +137,7 @@ function renderRecords(){
  $('recordsBody').innerHTML=S.filtered.slice(0,1000).map((r,i)=>`<tr class="rowclick" onclick="openDetail(${S.filtered.indexOf(r)})">${keys.map(k=>`<td>${esc(r[k])}</td>`).join('')}<td><span class="tag">${bucket(days(r))}</span></td></tr>`).join('')||'<tr><td colspan="20" class="empty">Nenhum registro.</td></tr>';
 }
 function render(){
- S.filtered=S.rows.filter(matches);setCards(S.filtered);renderCharts();renderCollection();renderRecords();renderAnalyticalGrid();
+ S.filtered=S.rows.filter(matches);setCards(S.filtered);renderCharts();renderCollection();renderRecords();
  $('subtitle').textContent=`Base: ${integer(S.rows.length)} registros • ${integer(new Set(S.rows.map(partner)).size)} parceiros • esquema conferido com a planilha`;
 }
 function switchTab(tab){
@@ -200,21 +158,42 @@ function suggest(){
 }
 function selectSuggestion(p){$('partnerSearch').value=decodeURIComponent(p);$('suggestions').style.display='none';render()}
 
-function renderAnalyticalGrid(){
- const keys=Object.keys(S.rows[0]||{});
- const head=document.querySelector('#analyticalTable thead');
- const body=document.querySelector('#analyticalTable tbody');
- head.innerHTML='<tr>'+keys.map(k=>`<th>${esc(k)}</th>`).join('')+'<th>FAIXA</th></tr>';
- const rows=S.filtered;
- body.innerHTML=rows.length?rows.map((r,i)=>`<tr class="rowclick" onclick="openDetail(${i})">${keys.map(k=>`<td title="${esc(r[k])}">${esc(r[k])}</td>`).join('')}<td><span class="tag">${bucket(days(r))}</span></td></tr>`).join(''):'<tr><td colspan="'+(keys.length+1)+'" class="empty">Nenhum registro encontrado.</td></tr>';
- $('gridMeta').textContent=`${integer(rows.length)} registros`;
- $('printSummary').textContent=`${integer(rows.length)} registros • filtros atuais`;
+function clearAllFilters(){
+ $('partnerSearch').value='';
+ $('aging').value='all';
+ $('seller').value='all';
+ $('title').value='all';
+ $('movement').value='all';
+ $('reneg').value='all';
+ $('suggestions').style.display='none';
+ render();
 }
-function printAnalyticalGrid(){
- // Print only the analytical grid. The browser's print dialog offers "Salvar como PDF".
- document.body.classList.add('printing-grid');
- window.print();
- setTimeout(()=>document.body.classList.remove('printing-grid'),500);
+function printCurrentData(){
+ const rows=S.filtered;
+ const cols=['PARCEIRO','DOCUMENTO','VENDEDOR','DATA','VENCIMENTO','ATRASO','TITULO','MOVIMENTO','VALOR','Renegociados ?','Banco'];
+ const present=cols.filter(k=>S.rows[0] && Object.prototype.hasOwnProperty.call(S.rows[0],k));
+ const total=rows.reduce((a,r)=>a+amount(r),0);
+ const overdue=rows.filter(r=>days(r)>0).reduce((a,r)=>a+amount(r),0);
+ const critical=rows.filter(r=>days(r)>365).reduce((a,r)=>a+amount(r),0);
+ const title=rows.length?'Relatório Financeiro — seleção atual':'Relatório Financeiro';
+ const filterText=[
+   $('partnerSearch').value ? 'Parceiro: '+$('partnerSearch').value : '',
+   $('aging').selectedOptions[0].text,
+   $('seller').value!=='all' ? 'Vendedor: '+$('seller').value : '',
+   $('title').value!=='all' ? 'Título: '+$('title').value : '',
+   $('movement').value!=='all' ? 'Movimento: '+$('movement').value : '',
+   $('reneg').value!=='all' ? 'Renegociado: '+$('reneg').selectedOptions[0].text : ''
+ ].filter(Boolean).join(' • ');
+ const win=window.open('','_blank','width=1200,height=800');
+ if(!win){alert('O navegador bloqueou a janela de impressão. Permita pop-ups para este site.');return;}
+ win.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(title)}</title>
+ <style>@page{size:A4 landscape;margin:10mm}body{font:9px Arial,sans-serif;color:#111;margin:0}h1{font-size:17px;margin:0 0 4px}p{margin:3px 0;color:#555}.summary{display:flex;gap:18px;margin:12px 0;padding:8px;background:#f3f4f6;border-radius:5px}.summary b{color:#111}table{width:100%;border-collapse:collapse;margin-top:8px}th,td{border-bottom:1px solid #ddd;padding:5px;text-align:left;vertical-align:top}th{background:#f3f4f6;font-size:8px}td{font-size:8px} .red{color:#b91c1c}.orange{color:#b45309}</style></head><body>
+ <h1>${esc(title)}</h1><p>Gerado em ${new Date().toLocaleString('pt-BR')}</p><p>${esc(filterText||'Todos os registros')}</p>
+ <div class="summary"><span><b>${integer(rows.length)}</b> títulos</span><span>Carteira: <b>${money(total)}</b></span><span>Vencido: <b class="red">${money(overdue)}</b></span><span>+365 dias: <b class="orange">${money(critical)}</b></span></div>
+ <table><thead><tr>${present.map(k=>`<th>${esc(k)}</th>`).join('')}<th>FAIXA</th></tr></thead><tbody>
+ ${rows.map(r=>`<tr>${present.map(k=>`<td>${esc(r[k])}</td>`).join('')}<td>${esc(bucket(days(r)))}</td></tr>`).join('')}
+ </tbody></table></body></html>`);
+ win.document.close(); win.focus(); setTimeout(()=>win.print(),300);
 }
 
 fetch('data.json').then(r=>r.json()).then(rows=>{
