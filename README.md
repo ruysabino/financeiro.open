@@ -1,31 +1,32 @@
-# Painel Financeiro — Cruzamentos + Cabeçalho
+# Dashboard Financeiro — V5
 
-Esta versão mantém o dashboard do ficheiro enviado e consolida duas melhorias:
+### Faixa de dias simplificada
+As faixas agora são únicas:
+- 0–30
+- 31–60
+- 61–90
+- 91–180
+- +180
 
-## Cruzamentos
+O lado da análise é definido por **Todos / Vencidos / A vencer**. Isso elimina a duplicidade de faixas no filtro e no cruzamento.
 
-A aba **Cruzamentos** permite cruzar duas dimensões usando os filtros ativos:
+### Grades
+As grades **Central de Cobrança** e **Títulos** permitem clicar no cabeçalho de cada coluna para alternar entre ordem crescente e decrescente.
 
-- Vendedor responsável
-- Parceiro
-- Tipo de movimento
-- Tipo de título
-- Faixa de dias
-- Renegociado
+### Impressão / PDF
+Cada grade possui dois botões apenas com ícones:
+- impressora: imprimir;
+- PDF: abrir a versão pronta para salvar como PDF.
 
-É possível medir por **Valor (R$)** ou **Quantidade de títulos**. A matriz usa escala de intensidade para destacar os maiores cruzamentos, permite inverter linhas/colunas e clicar numa célula para aplicar o cruzamento aos filtros.
+A impressão inclui a logo no cabeçalho.
 
-## Cabeçalho
+### Cruzamentos
+A aba Cruzamentos usa a faixa de dias única. Se o Status estiver filtrado para Vencidos ou A vencer, o cruzamento respeita esse filtro; em Todos, combina os dois lados.
 
-A marca `logo.png` foi aplicada no cabeçalho com dimensão controlada, mantendo a proporção e evitando que a logo domine a tela. Em telas menores ela reduz automaticamente.
-
-## Publicação no GitHub Pages
-
-Mantenha estes quatro arquivos na mesma pasta:
-
-- `index.html`
-- `data.json`
-- `schema.json`
-- `logo.png`
-
-O `index.html` referencia `data.json` e `logo.png` por caminho relativo.
+Arquivos:
+- index.html
+- data.json
+- schema.json
+- logo.png
+- printer.png
+- pdf.png
