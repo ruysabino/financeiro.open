@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "gotek-painel-financeiro-v8",
+  "compatibility_date": "2026-08-16",
+  "pages_build_output_dir": ".",
+  "vars": {
+    "REQUIRE_ACCESS": "true"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "gotek-financeiro",
+      "database_id": "5d7a5082-9072-4f1f-b78c-0c5fbec6fca5"
+    }
+  ]
+}

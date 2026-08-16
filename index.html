@@ -610,7 +610,7 @@ function suggest(){
 }
 function selectSuggestion(p){$('partnerSearch').value=decodeURIComponent(p);$('suggestions').style.display='none';render()}
 
-fetch('data.json').then(r=>r.json()).then(rows=>{
+fetch('/api/data', {credentials:'same-origin'}).then(r=>r.json()).then(rows=>{
   S.rows=rows;
   S.keys={partner:'PARCEIRO',date:'DATA',due:'VENCIMENTO',delay:'ATRASO',document:'DOCUMENTO',seller:'VENDEDOR',amount:'VALOR',movement:'MOVIMENTO',reneg:'Renegociados ?',bank:'Banco',title:'TITULO',history:'Histórico'};
   const keys=Object.keys(rows[0]||{});
